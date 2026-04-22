@@ -10,6 +10,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IValidationService, ValidationService>();
+builder.Services.AddScoped<IBlacklistService, BlacklistService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 var app = builder.Build();

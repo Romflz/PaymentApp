@@ -7,11 +7,13 @@ public class PaymentService : IPaymentService
 {
     private readonly AppDbContext _context;
     private readonly IValidationService _validationService;
+    private readonly IBlacklistService _blacklistService;
 
-    public PaymentService(AppDbContext context, IValidationService validationService)
+    public PaymentService(AppDbContext context, IValidationService validationService, IBlacklistService blacklistService)
     {
         _context = context;
         _validationService = validationService;
+        _blacklistService = blacklistService;
     }
 
     public async Task<Transaction> ProcessPayment(string senderName, decimal amount, string iban)
@@ -35,6 +37,9 @@ public class PaymentService : IPaymentService
         var ibanError = _validationService.GetIbanError(iban);
         if (ibanError != null)
             errors.Add(ibanError);
+
+        if (_validationService.IsValidName(senderName) && await _blacklistService.IsBlacklisted(senderName))
+            errors.Add("Sender is blacklisted.");
 
         if (errors.Count > 0)
         {
