@@ -1,0 +1,17 @@
+<h2>Payment Validation</h2>
+
+<form method="post" asp-action="Process">
+  <div>
+    <label>Sender Name</label>
+    <input type="text" name="SenderName" />
+  </div>
+  <div>
+    <label>Amount</label>
+    <input type="number" name="Amount" step="0.01" />
+  </div>
+  <div>
+    <label>IBAN</label>
+    <input type="text" name="Iban" />
+  </div>
+  <button type="submit">Submit Payment</button>
+</form>
