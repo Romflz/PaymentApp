@@ -28,7 +28,8 @@ public class PaymentController : Controller
         );
 
         if (transaction.Result == "Accepted")
-            TempData["Success"] = $"Payment accepted. Transaction ID: {transaction.TransactionReference}";
+            TempData["Success"] =
+                $"Payment accepted. Sender: {senderName} | Amount: {amount:0.00} | IBAN: {iban} | Transaction ID: {transaction.TransactionReference}";
         else
             TempData["Error"] = transaction.RejectionReason;
 
