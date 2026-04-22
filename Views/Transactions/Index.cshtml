@@ -1,0 +1,47 @@
+@model IEnumerable<PaymentApp.Models.Transaction>
+
+<h2 class="text-2xl font-semibold mb-6">Transactions</h2>
+
+@if (!Model.Any())
+{
+    <p class="text-slate-500">No transactions yet.</p>
+}
+else
+{
+    <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+        <table class="w-full text-sm">
+            <thead class="bg-slate-100 text-slate-600 text-left">
+                <tr>
+                    <th class="px-4 py-3 font-medium">Date</th>
+                    <th class="px-4 py-3 font-medium">Sender</th>
+                    <th class="px-4 py-3 font-medium">Amount</th>
+                    <th class="px-4 py-3 font-medium">IBAN</th>
+                    <th class="px-4 py-3 font-medium">Result</th>
+                    <th class="px-4 py-3 font-medium">Reference / Reason</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200">
+                @foreach (var t in Model)
+                {
+                    <tr class="hover:bg-slate-50">
+                        <td class="px-4 py-3 text-slate-600 whitespace-nowrap">@t.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td class="px-4 py-3">@t.SenderName</td>
+                        <td class="px-4 py-3 font-mono">@t.Amount.ToString("0.00")</td>
+                        <td class="px-4 py-3 font-mono text-xs">@t.EncryptedIban</td>
+                        <td class="px-4 py-3">
+                            @if (t.Result == "Accepted")
+                            {
+                                <span class="inline-flex px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-xs font-medium">Accepted</span>
+                            }
+                            else
+                            {
+                                <span class="inline-flex px-2 py-0.5 rounded-full bg-red-100 text-red-800 text-xs font-medium">Rejected</span>
+                            }
+                        </td>
+                        <td class="px-4 py-3 text-slate-600">@(t.TransactionReference ?? t.RejectionReason)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
