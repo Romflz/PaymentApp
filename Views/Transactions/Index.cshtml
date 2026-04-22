@@ -1,4 +1,8 @@
 @model IEnumerable<PaymentApp.Models.Transaction>
+@{
+    var currentPage = (int)ViewData["CurrentPage"]!;
+    var totalPages = (int)ViewData["TotalPages"]!;
+}
 
 <h2 class="text-2xl font-semibold mb-6">Transactions</h2>
 
@@ -43,5 +47,33 @@ else
                 }
             </tbody>
         </table>
+    </div>
+
+    <div class="flex items-center justify-between mt-4">
+        <p class="text-sm text-slate-600">Page @currentPage of @totalPages</p>
+        <div class="flex gap-2">
+            @if (currentPage > 1)
+            {
+                <a href="/transactions?page=@(currentPage - 1)"
+                   class="px-3 py-1.5 rounded-md border border-slate-300 text-sm text-slate-700 hover:bg-slate-50 transition">
+                    Previous
+                </a>
+            }
+            else
+            {
+                <span class="px-3 py-1.5 rounded-md border border-slate-200 text-sm text-slate-400 cursor-not-allowed">Previous</span>
+            }
+            @if (currentPage < totalPages)
+            {
+                <a href="/transactions?page=@(currentPage + 1)"
+                   class="px-3 py-1.5 rounded-md border border-slate-300 text-sm text-slate-700 hover:bg-slate-50 transition">
+                    Next
+                </a>
+            }
+            else
+            {
+                <span class="px-3 py-1.5 rounded-md border border-slate-200 text-sm text-slate-400 cursor-not-allowed">Next</span>
+            }
+        </div>
     </div>
 }
