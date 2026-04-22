@@ -23,6 +23,22 @@ public class TransactionsController : Controller
         if (page < 1) page = 1;
 
         var totalCount = await _context.Transactions.CountAsync();
+        var acceptedCount = await _context.Transactions.CountAsync(t => t.Result == "Accepted");
+        var rejectedCount = totalCount - acceptedCount;
+
+        var rejectionReasons = await _context.Transactions
+            .Where(t => t.Result == "Rejected" && t.RejectionReason != null)
+            .Select(t => t.RejectionReason!)
+            .ToListAsync();
+
+        var topReasons = rejectionReasons
+            .SelectMany(r => r.Split(" | "))
+            .GroupBy(r => r)
+            .Select(g => new KeyValuePair<string, int>(g.Key, g.Count()))
+            .OrderByDescending(x => x.Value)
+            .Take(5)
+            .ToList();
+
         var totalPages = Math.Max(1, (int)Math.Ceiling(totalCount / (double)pageSize));
         if (page > totalPages) page = totalPages;
 
@@ -38,6 +54,10 @@ public class TransactionsController : Controller
 
         ViewData["CurrentPage"] = page;
         ViewData["TotalPages"] = totalPages;
+        ViewData["TotalCount"] = totalCount;
+        ViewData["AcceptedCount"] = acceptedCount;
+        ViewData["RejectedCount"] = rejectedCount;
+        ViewData["TopReasons"] = topReasons;
 
         return View(transactions);
     }
