@@ -1,5 +1,6 @@
 @model IEnumerable<PaymentApp.Models.Transaction>
 @{
+    ViewData["Title"] = "Transactions";
     var currentPage = (int)ViewData["CurrentPage"]!;
     var totalPages = (int)ViewData["TotalPages"]!;
     var totalCount = (int)ViewData["TotalCount"]!;
