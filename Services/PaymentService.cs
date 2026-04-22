@@ -8,12 +8,18 @@ public class PaymentService : IPaymentService
     private readonly AppDbContext _context;
     private readonly IValidationService _validationService;
     private readonly IBlacklistService _blacklistService;
+    private readonly IEncryptionService _encryptionService;
 
-    public PaymentService(AppDbContext context, IValidationService validationService, IBlacklistService blacklistService)
+    public PaymentService(
+        AppDbContext context,
+        IValidationService validationService,
+        IBlacklistService blacklistService,
+        IEncryptionService encryptionService)
     {
         _context = context;
         _validationService = validationService;
         _blacklistService = blacklistService;
+        _encryptionService = encryptionService;
     }
 
     public async Task<Transaction> ProcessPayment(string senderName, decimal amount, string iban)
@@ -22,7 +28,7 @@ public class PaymentService : IPaymentService
         {
             SenderName = senderName,
             Amount = amount,
-            EncryptedIban = iban,
+            EncryptedIban = _encryptionService.Encrypt(iban),
             CreatedAt = DateTime.UtcNow
         };
 
