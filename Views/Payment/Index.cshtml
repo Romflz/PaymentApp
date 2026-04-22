@@ -1,6 +1,15 @@
 <h2>Payment Validation</h2>
 
-<form method="post" asp-action="Process">
+@if (TempData["Success"] != null)
+{
+  <div style="color: green;">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+  <div style="color: red;">@TempData["Error"]</div>
+}
+
+<form method="post" action="/process">
   <div>
     <label>Sender Name</label>
     <input type="text" name="SenderName" />
